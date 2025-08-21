@@ -40,8 +40,15 @@ return [
     'sepolia' => [
         'rpc_url' => env('RPC_URL'),
     ],
-
     'crypto' => [
         'store_wallet_address' => env('CRYPTO_STORE_WALLET_ADDRESS'),
+    ],
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+        'merchant_id' => env('MIDTRANS_MERCHANT_ID'),
+        'is_production' => (bool) env('MIDTRANS_IS_PRODUCTION', false),
+        'is_sanitized' => (bool) env('MIDTRANS_IS_SANITIZED', true),
+        'is_3ds' => (bool) env('MIDTRANS_IS_3DS', true),
     ],
 ];

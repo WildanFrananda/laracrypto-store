@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Events\OrderCompleted;
 use App\Models\Order;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,7 +25,7 @@ class VerifyCryptoPayment implements ShouldQueue {
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $orderId) {}
+    public function __construct(public int $orderId, public string $txHash) {}
 
     /**
      * Execute the job.
@@ -40,19 +41,25 @@ class VerifyCryptoPayment implements ShouldQueue {
 
         try {
             $web3 = new Web3(config('services.sepolia.rpc_url'));
-            $receipt = $web3->eth()->getTransactionReceipt($order->transaction_hash);
+            $receipt = $web3->eth()->getTransactionReceipt($this->txHash);
 
             if ($receipt === null) {
-                Log::warning("Order {$order->id} payment not confirmed yet.");
+                Log::info("Order #{$order->id} payment is still pending. Releasing job back to queue.");
+                $this->release($this->backoff);
 
                 return;
             }
 
-            if (isset($receipt['status']) && $receipt['status'] === '0x1') {
+            if (isset($receipt['status']) && $receipt['status'] == '1') {
                 $order->update(['status' => 'completed']);
-                Log::info("Order {$order->id} payment confirmed successfully.");
+                OrderCompleted::dispatch($order);
+                Log::info("Order #{$order->id} payment confirmed successfully.");
+            } elseif (isset($receipt['status']) && $receipt['status'] == '0') {
+                $order->update(['status' => 'failed']);
+                Log::error("Order #{$order->id} payment failed on-chain (status 0x0).");
             } else {
-                Log::error("Error fetching transaction receipt for order {$order->id}. Status: {$receipt['status']}");
+                Log::warning("Unexpected receipt status {$receipt['status']} for Order #{$order->id}. Releasing job.");
+                $this->release($this->backoff);
             }
         } catch (Exception $e) {
             Log::critical("Critical error verifying order {$this->orderId}: ".$e->getMessage());

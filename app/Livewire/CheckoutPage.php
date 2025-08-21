@@ -4,88 +4,44 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Jobs\VerifyCryptoPayment;
-use App\Models\Order;
-use Illuminate\Support\Facades\Cache;
-use Livewire\Attributes\On;
+use App\Exceptions\InsufficientStockException;
+use App\Services\CartService;
+use App\Services\OrderService;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class CheckoutPage extends Component {
-    public $cart = [];
+    public Collection $cartItems;
 
-    public $totalUSD = 0;
+    public float $total = 0.0;
 
-    public $totalETH = 0;
+    public function mount(CartService $cartService): void {
+        $this->cartItems = $cartService->get();
+        $this->total = $cartService->getTotal();
 
-    public ?Order $order = null;
-
-    public function mount() {
-        $this->updateCart();
-    }
-
-    public function updateCart() {
-        $this->cart = session()->get('cart', []);
-        $this->totalUSD = collect($this->cart)->sum(fn ($item) => $item['price'] * $item['quantity']);
-        $ethPrice = Cache::get('eth_price_usd');
-
-        if ($ethPrice) {
-            $this->totalETH = $this->totalUSD / $ethPrice;
+        if ($this->cartItems->isEmpty()) {
+            $this->redirect(route('cart.index'));
         }
     }
 
-    public function removeItem(int $productId) {
-        session()->forget("cart.{$productId}");
-        $this->updateCart();
-        $this->dispatch('cart-updated');
-    }
+    public function placeOrder(OrderService $orderService, CartService $cartService): void {
+        $user = auth()->user();
 
-    public function placeOrder() {
-        if (empty($this->cart)) {
-            $this->dispatch('error', 'Your cart is empty.');
+        try {
+            $order = $orderService->createFromCart($user);
 
-            return;
+            session()->forget('cart');
+            $this->dispatch('cart-updated');
+            $this->redirect(route('orders.payment', $order));
+
+        } catch (InsufficientStockException $e) {
+            session()->flash('error', $e->getMessage());
+            $this->redirect(route('cart.index'));
         }
-
-        $this->order = Order::create([
-            'user_id' => auth()->id(),
-            'total_amount' => $this->totalUSD,
-            'crypto_amount' => $this->totalETH,
-            'crypto_currency' => 'ETH',
-            'status' => 'pending',
-            'recipient_address' => config('services.crypto.store_wallet_address'),
-        ]);
-
-        $this->dispatch('initiate-payment', [
-            'amount' => (string) $this->order->crypto_amount,
-            'toAddress' => $this->order->recipient_address,
-        ]);
-    }
-
-    #[On('payment-sent')]
-    public function handlePaymentSent(string $txHash) {
-        if ($this->order) {
-            $this->order->update([
-                'transaction_hash' => $txHash,
-                'status' => 'awaiting_confirmation',
-            ]);
-        }
-
-        VerifyCryptoPayment::dispatch($this->order->id)
-            ->onQueue('payments');
-
-        session()->forget('cart');
-        $this->dispatch('cart-updated');
-
-        return $this->redirect('/order-summary/'.$this->order->id, navigate: true);
     }
 
     public function render() {
-        return view('livewire.checkout-page')->layout('layouts.app')
-            ->with([
-                'cart' => $this->cart,
-                'totalUSD' => $this->totalUSD,
-                'totalETH' => $this->totalETH,
-                'order' => $this->order,
-            ]);
+        return view('livewire.checkout-page')
+            ->layout('layouts.app');
     }
 }
