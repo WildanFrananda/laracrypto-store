@@ -25,9 +25,7 @@ class ProfilePage extends Component {
         $this->activeTab = $tabName;
     }
 
-    public function render(OrderRepositoryInterface $orderRepository) {
-        $orders = $orderRepository->getForUser(Auth::user());
-
+    public function render(OrderRepositoryInterface $orderRepository){
         $orders = $this->activeTab === 'orders'
             ? $orderRepository->getForUser(Auth::user())
             : collect();

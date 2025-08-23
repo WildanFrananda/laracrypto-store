@@ -108,7 +108,10 @@ class PaymentService {
 
         if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
             if ($fraudStatus == 'accept') {
-                $order->update(['status' => 'completed']);
+                $order->update([
+                    'status' => 'completed',
+                    'payment_method' => 'midtrans',
+                ]);
                 OrderCompleted::dispatch($order);
             }
         } elseif ($transactionStatus == 'pending') {

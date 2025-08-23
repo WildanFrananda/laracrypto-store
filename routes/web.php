@@ -42,6 +42,7 @@ Route::get('/dashboard', ProductCatalog::class)
 
 Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/logout', [ProfileController::class, 'logout'])->name('profile.logout');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

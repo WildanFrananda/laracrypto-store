@@ -45,6 +45,8 @@ class PaymentPage extends Component {
         $this->order->update([
             'status' => 'awaiting_confirmation',
             'transaction_hash' => $txHash,
+            'payment_method' => 'crypto',
+            'crypto_amount' => $this->cryptoAmount,
         ]);
 
         VerifyCryptoPayment::dispatch($this->order->id, $txHash);

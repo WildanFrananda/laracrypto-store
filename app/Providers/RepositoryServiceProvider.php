@@ -10,10 +10,12 @@ use App\Repositories\Contracts\OrderRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\PromotionRepositoryInterface;
 use App\Repositories\Contracts\ReviewRepositoryInterface;
+use App\Repositories\Contracts\StatsRepositoryInterface;
 use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\PromotionRepository;
 use App\Repositories\ReviewRepository;
+use App\Repositories\StatsRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider {
@@ -40,6 +42,10 @@ class RepositoryServiceProvider extends ServiceProvider {
         $this->app->bind(
             ReviewRepositoryInterface::class,
             ReviewRepository::class
+        );
+        $this->app->bind(
+            StatsRepositoryInterface::class,
+            StatsRepository::class
         );
     }
 

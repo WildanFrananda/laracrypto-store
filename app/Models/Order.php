@@ -17,12 +17,15 @@ class Order extends Model {
         'user_id',
         'order_number',
         'total_amount',
+        'crypto_amount',
         'status',
+        'payment_method',
         'transaction_hash',
     ];
 
     protected $casts = [
         'total_amount' => 'float',
+        'crypto_amount' => 'float',
     ];
 
     public function user(): BelongsTo {

@@ -61,4 +61,27 @@ class ProductRepository implements ProductRepositoryInterface {
             ->take($limit)
             ->get();
     }
+
+    public function search(string $term, int $limit = 5): Collection {
+        if (empty(trim($term))) {
+            return collect();
+        }
+
+        $searchTerms = array_filter(explode(' ', $term));
+
+        if (empty($searchTerms)) {
+            return collect();
+        }
+
+        return Product::query()
+            ->where(function (Builder $query) use ($searchTerms) {
+                foreach ($searchTerms as $word) {
+                    $query
+                        ->orWhere('name', 'LIKE', "%{$word}%")
+                        ->orWhere('description', 'LIKE', "%{$word}%");
+                }
+            })
+            ->take($limit)
+            ->get();
+    }
 }

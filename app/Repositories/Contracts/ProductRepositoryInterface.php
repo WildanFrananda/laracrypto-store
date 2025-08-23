@@ -18,4 +18,6 @@ interface ProductRepositoryInterface {
     public function findBySlug(string $slug): ?Product;
 
     public function getBestSellers(int $limit = 4): Collection;
+
+    public function search(string $term, int $limit = 5): Collection;
 }
