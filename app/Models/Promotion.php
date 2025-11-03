@@ -6,12 +6,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Promotion extends Model {
-    /** @use HasFactory<\Database\Factories\PromotionFactory> */
-    use HasFactory;
+class Promotion extends Model implements HasMedia {
+    use HasFactory, InteractsWithMedia;
 
-    protected $fillable = ['title', 'image_url', 'link_url', 'is_active'];
+    protected $fillable = ['title', 'subtitle', 'event_date', 'link_url', 'details', 'is_active'];
 
-    protected $casts = ['is_active' => 'boolean'];
+    protected $casts = [
+        'is_active' => 'boolean',
+        'event_date' => 'date',
+    ];
+
+    public function getImageUrlAttribute(): string {
+        return $this->getFirstMediaUrl('promotions');
+    }
 }

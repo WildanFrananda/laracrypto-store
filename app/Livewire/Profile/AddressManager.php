@@ -87,6 +87,11 @@ class AddressManager extends Component {
         $this->loadAddresses();
     }
 
+    public function cancel(): void {
+        $this->showModal = false;
+        $this->resetForm();
+    }
+
     private function loadAddresses(): void {
         $this->addresses = Auth::user()->addresses()->latest()->get();
     }

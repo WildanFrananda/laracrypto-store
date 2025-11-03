@@ -7,7 +7,7 @@
 
     <div class="flex justify-between items-center mb-6">
         <h3 class="text-lg font-medium text-gray-900">Saved Address</h3>
-        <button wire:click="create" type="button" class="inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-800">
+        <button wire:click="create" type="button" class="inline-flex items-center px-4 py-2 bg-[#9B7E5C] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-800">
             Add New Address
         </button>
     </div>
@@ -62,7 +62,7 @@
                     @error('postal_code') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                 </div>
                 <div class="mt-6 flex justify-end space-x-4">
-                    <button type="button" @click="$wire.showModal = false" class="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
+                    <button type="button" wire:click="cancel" class="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-md">Save</button>
                 </div>
             </form>

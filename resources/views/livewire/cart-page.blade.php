@@ -1,8 +1,8 @@
-<div>
+<div class="bg-[#F8F3E9]">
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+                <div class="p-6 text-[#443937]">
                     <h2 class="text-2xl font-semibold mb-6">Shopping Cart</h2>
 
                     @if (session()->has('error'))
@@ -16,19 +16,19 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead>
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subtotal</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"></th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-[#443937] uppercase">Product</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-[#443937] uppercase">Price</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-[#443937] uppercase">Quantity</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-[#443937] uppercase">Subtotal</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-[#443937] uppercase"></th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($cartItems as $variantId => $item)
                                     <tr wire:key="{{ $variantId }}">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $item['product_name'] }}</div>
-                                            <div class="text-sm text-gray-500">{{ $item['material'] }}</div>
+                                            <div class="text-sm font-medium text-[#443937]">{{ $item['product_name'] }}</div>
+                                            <div class="text-sm text-[#443937]">{{ $item['material'] }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">IDR {{ number_format((float)$item['price'], 0, ',', '.') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -51,12 +51,12 @@
 
                         <div class="mt-6 text-right">
                             <p class="text-xl">Total: <span class="font-bold">IDR {{ number_format($total, 0, ',', '.') }}</span></p>
-                            <a href="{{ route('checkout.index') }}" class="mt-4 inline-block bg-gray-900 text-white py-3 px-6 rounded-md hover:bg-gray-800">
+                            <a href="{{ route('checkout.index') }}" class="mt-4 inline-block bg-[#9B7E5C] text-white py-3 px-6 rounded-md hover:bg-gray-800">
                                 Continue To Payment
                             </a>
                         </div>
                     @else
-                        <p class="text-center text-gray-500">Your shopping cart is empty.</p>
+                        <p class="text-center text-[#443937]">Your shopping cart is empty.</p>
                     @endif
                 </div>
             </div>

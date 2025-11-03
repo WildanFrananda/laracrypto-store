@@ -7,11 +7,13 @@ namespace App\Providers;
 use App\Repositories\CategoryRepository;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\OrderRepositoryInterface;
+use App\Repositories\Contracts\PageContentRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\PromotionRepositoryInterface;
 use App\Repositories\Contracts\ReviewRepositoryInterface;
 use App\Repositories\Contracts\StatsRepositoryInterface;
 use App\Repositories\OrderRepository;
+use App\Repositories\PageContentRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\PromotionRepository;
 use App\Repositories\ReviewRepository;
@@ -46,6 +48,10 @@ class RepositoryServiceProvider extends ServiceProvider {
         $this->app->bind(
             StatsRepositoryInterface::class,
             StatsRepository::class
+        );
+        $this->app->bind(
+            PageContentRepositoryInterface::class,
+            PageContentRepository::class
         );
     }
 

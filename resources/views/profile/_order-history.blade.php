@@ -1,3 +1,7 @@
+@php
+    use App\Enums\OrderStatus;
+@endphp
+
 <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-gray-200">
         <thead>
@@ -17,11 +21,11 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span @class([
                             'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                            'bg-yellow-100 text-yellow-800' => in_array($order->status, ['pending', 'awaiting_confirmation']),
-                            'bg-green-100 text-green-800' => $order->status === 'completed',
-                            'bg-red-100 text-red-800' => $order->status === 'failed',
+                            'bg-yellow-100 text-yellow-800' => in_array($order->status, [OrderStatus::PENDING, OrderStatus::AWAITING_CONFIRMATION]),
+                            'bg-green-100 text-green-800' => $order->status === OrderStatus::COMPLETED,
+                            'bg-red-100 text-red-800' => $order->status === OrderStatus::FAILED,
                         ])>
-                            {{ ucfirst(str_replace('_', ' ', $order->status)) }}
+                            {{ ucfirst(str_replace('_', ' ', $order->status->value)) }}
                         </span>
                     </td>
                 </tr>

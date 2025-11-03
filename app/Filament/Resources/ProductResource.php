@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
+use App\Models\Color;
 use App\Models\Product;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -17,9 +21,12 @@ use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductResource extends Resource {
     protected static ?string $model = Product::class;
@@ -51,6 +58,58 @@ class ProductResource extends Resource {
                             RichEditor::make('description')
                                 ->columnSpanFull(),
                         ])->columns(2),
+
+                    Tab::make('Images')
+                        ->schema([
+                            Repeater::make('images_with_colors')
+                                ->schema([
+                                    FileUpload::make('image_path')
+                                        ->image()
+                                        ->directory('product-images')
+                                        ->disk('public')
+                                        ->visibility('public')
+                                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                        ->maxSize(5120) // 5MB
+                                        ->imageEditor()
+                                        ->hiddenLabel()
+                                        ->columnSpan(1),
+                                    Select::make('color_id')
+                                        ->label('Associated Color')
+                                        ->options(function ($get) {
+                                            $colorIds = $get('../../colors');
+                                            if (empty($colorIds)) {
+                                                return [];
+                                            }
+
+                                            return Color::whereIn('id', $colorIds)->pluck('name', 'id');
+                                        })
+                                        ->required()
+                                        ->columnSpan(1),
+                                    Hidden::make('media_uuid'),
+                                    Placeholder::make('existing_image_preview')
+                                        ->label('Current Image')
+                                        ->content(function ($get) {
+                                            $mediaUuid = $get('media_uuid');
+                                            if (!$mediaUuid) {
+                                                return 'New image upload';
+                                            }
+
+                                            $media = Media::where('uuid', $mediaUuid)->first();
+                                            if (!$media) {
+                                                return 'Image not found';
+                                            }
+
+                                            return new HtmlString('<img src="'.$media->getUrl().'" style="max-width: 100px; max-height: 100px;" />');
+                                        })
+                                        ->visible(fn ($get) => !empty($get('media_uuid')))
+                                        ->columnSpan(2),
+                                ])
+                                ->addActionLabel('Add Image with Color')
+                                ->columns(2)
+                                ->columnSpanFull()
+                                ->defaultItems(0),
+                        ]),
+
                     Tab::make('Variants')
                         ->schema([
                             Repeater::make('variants')
@@ -83,7 +142,8 @@ class ProductResource extends Resource {
                         ->schema([
                             CheckboxList::make('colors')
                                 ->relationship('colors', 'name')
-                                ->columns(4),
+                                ->columns(4)
+                                ->live(),
                         ]),
                 ])->columnSpanFull(),
             ]);
@@ -92,6 +152,9 @@ class ProductResource extends Resource {
     public static function table(Table $table): Table {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('media')
+                    ->collection('products')
+                    ->label('Image'),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),

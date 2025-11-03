@@ -9,12 +9,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Product extends Model {
-    /** @use HasFactory<\Database\Factories\ProductFactory> */
-    use HasFactory;
+class Product extends Model implements HasMedia {
+    use HasFactory, InteractsWithMedia;
 
     protected $fillable = ['category_id', 'name', 'slug', 'description', 'base_price'];
+
+    public function registerMediaConversions(?Media $media = null): void {
+        $this->addMediaConversion('thumb')
+            ->width(400)
+            ->height(500)
+            ->sharpen(10);
+    }
+
+    public function getImageUrlAttribute(): string {
+        return $this->getFirstMediaUrl('products', 'thumb');
+    }
 
     public function category(): BelongsTo {
         return $this->belongsTo(Category::class);

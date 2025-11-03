@@ -12,7 +12,9 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                'sans': ['Volkhov', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'serif'],
+                'serif': ['Volkhov', 'ui-serif', 'Georgia', 'serif'],
+                'volkhov': ['Volkhov', 'serif'],
             },
         },
     },

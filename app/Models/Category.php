@@ -6,10 +6,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Category extends Model {
-    /** @use HasFactory<\Database\Factories\CategoryFactory> */
-    use HasFactory;
+class Category extends Model implements HasMedia {
+    use HasFactory, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -20,4 +21,8 @@ class Category extends Model {
         'name',
         'slug',
     ];
+
+    public function getImageUrlAttribute(): string {
+        return $this->getFirstMediaUrl('categories');
+    }
 }

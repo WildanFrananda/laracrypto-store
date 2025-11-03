@@ -22,8 +22,8 @@ class StatsOverview extends BaseWidget {
             Stat::make('Midtrans Revenue', 'IDR '.number_format($statsRepository->getRevenueByMethod('midtrans'), 0, ',', '.'))
                 ->description('Total Revenue from Midtrans.'),
 
-            Stat::make('Crypto Revenue (ETH)', number_format($statsRepository->getTotalCryptoRevenue(), 8).' ETH')
-                ->description('Total Revenue from Crypto.'),
+            // Stat::make('Crypto Revenue (ETH)', number_format($statsRepository->getTotalCryptoRevenue(), 8).' ETH')
+            //     ->description('Total Revenue from Crypto.'),
             Stat::make('New Orders (Last 30 Days)', $statsRepository->getNewOrdersCount())
                 ->description('Total Orders from the last 30 days.')
                 ->color('success')

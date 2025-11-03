@@ -6,13 +6,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PromotionResource\Pages;
 use App\Models\Promotion;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -25,8 +28,14 @@ class PromotionResource extends Resource {
         return $form
             ->schema([
                 TextInput::make('title')->required()->maxLength(255),
-                TextInput::make('image_url')->required()->url()->label('Image URL'),
-                TextInput::make('link_url')->url()->label('Link URL (Optional)'),
+                TextInput::make('subtitle')->maxLength(255),
+                DatePicker::make('event_date'),
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->collection('promotions')
+                    ->image()
+                    ->required(),
+                RichEditor::make('details')
+                    ->columnSpanFull(),
                 Toggle::make('is_active')->required()->default(true),
             ]);
     }
@@ -34,7 +43,8 @@ class PromotionResource extends Resource {
     public static function table(Table $table): Table {
         return $table
             ->columns([
-                ImageColumn::make('image_url')->label('Image'),
+                SpatieMediaLibraryImageColumn::make('image')
+                    ->collection('promotions'),
                 TextColumn::make('title')->searchable(),
                 IconColumn::make('is_active')->boolean(),
                 TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
@@ -44,6 +54,7 @@ class PromotionResource extends Resource {
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

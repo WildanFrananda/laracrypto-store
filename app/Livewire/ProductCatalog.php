@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Models\Color;
+use App\Models\Product;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Services\CartService;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -31,6 +33,21 @@ class ProductCatalog extends Component {
 
     public function updated(): void {
         $this->resetPage();
+    }
+
+    public function buyNow(int $productId, CartService $cartService): void {
+        $product = Product::with('variants')->findOrFail($productId);
+        $firstVariant = $product->variants->first();
+
+        if (!$firstVariant) {
+            session()->flash('error', 'This product has no variants available.');
+
+            return;
+        }
+
+        $cartService->add($firstVariant->id);
+        $this->dispatch('cart-updated');
+        $this->redirect(route('checkout.index'));
     }
 
     public function render(ProductRepositoryInterface $productRepository) {

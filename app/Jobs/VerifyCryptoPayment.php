@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Enums\OrderStatus;
 use App\Events\OrderCompleted;
 use App\Models\Order;
 use Exception;
@@ -33,7 +34,7 @@ class VerifyCryptoPayment implements ShouldQueue {
     public function handle(): void {
         $order = Order::find($this->orderId);
 
-        if (!$order || $order->status !== 'awaiting_confirmation') {
+        if (!$order || $order->status !== OrderStatus::AWAITING_CONFIRMATION) {
             Log::info('Verification skipped for order: '.$this->orderId);
 
             return;

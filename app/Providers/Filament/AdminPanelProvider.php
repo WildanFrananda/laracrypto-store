@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\PageContentResource;
+use App\Models\PageContent;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -49,6 +52,13 @@ class AdminPanelProvider extends PanelProvider {
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('About Us Page')
+                    ->url(fn (): string => PageContentResource::getUrl('edit', ['record' => PageContent::where('page_slug', 'about-us')->firstOrFail()]))
+                    ->icon('heroicon-o-identification')
+                    ->group('Content')
+                    ->sort(3),
             ]);
     }
 }

@@ -23,15 +23,19 @@ class PaymentPage extends Component {
 
     public function mount(Order $order, PaymentService $paymentService): void {
         abort_if($order->user_id !== auth()->id(), 403);
+
         $this->order = $order;
         $this->recipientAddress = config('services.crypto.store_wallet_address');
 
-        $web3PaymentData = $paymentService->prepareWeb3Payment($this->order);
-        if ($web3PaymentData) {
-            $this->cryptoAmount = $web3PaymentData['amount'];
+        if (in_array($this->order->status->value, ['awaiting_confirmation', 'completed', 'failed'])) {
+            $this->isProcessing = true;
+        } else {
+            $web3PaymentData = $paymentService->prepareWeb3Payment($this->order);
+            if ($web3PaymentData) {
+                $this->cryptoAmount = $web3PaymentData['amount'];
+            }
+            $this->midtransSnapToken = $paymentService->createMidtransSnapToken($this->order);
         }
-
-        $this->midtransSnapToken = $paymentService->createMidtransSnapToken($this->order);
     }
 
     #[On('payment-sent')]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Widgets;
 
+use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,12 +22,8 @@ class LatestOrders extends BaseWidget {
                 Tables\Columns\TextColumn::make('user.name')->label('Customer'),
                 Tables\Columns\TextColumn::make('total_amount')->money('IDR'),
                 Tables\Columns\TextColumn::make('status')
-                    ->colors([
-                        'warning' => fn ($state): bool => in_array($state, ['pending', 'awaiting_confirmation']),
-                        'success' => 'completed',
-                        'danger' => 'failed',
-                    ])
-                    ->badge(),
+                    ->badge()
+                    ->color(fn (OrderStatus $state): string => $state->getColor()),
             ])
             ->actions([
                 Tables\Actions\Action::make('View')

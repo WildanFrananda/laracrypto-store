@@ -4,12 +4,12 @@
         wire:model.live.debounce.300ms="searchTerm"
         @focus="open = true"
         placeholder="Search Product..."
-        class="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-md focus:ring-amber-500 focus:border-amber-500"
+        class="w-full sm:w-64 px-4 py-2 border bg-[#F8F3E9] border-[#9B7E5C]-300 rounded-md focus:ring-[#9B7E5C] focus:border-[#9B7E5C]"
     >
 
     <div x-show="open && $wire.searchTerm.length > 2"
         x-transition
-        class="absolute z-10 mt-2 w-full sm:w-96 bg-white border border-gray-200 rounded-md shadow-lg">
+        class="absolute z-10 mt-2 w-full sm:w-96 bg-[#F8F3E9] border border-gray-200 rounded-md shadow-lg">
         @if($results->isNotEmpty())
             <ul class="divide-y divide-gray-100">
                 @foreach($results as $product)
@@ -25,7 +25,7 @@
                 @endforeach
             </ul>
         @elseif(strlen($searchTerm) > 2)
-            <p class="p-4 text-sm text-gray-500">No Result For "{{ $searchTerm }}".</p>
+            <p class="p-4 text-sm text-[#443937]">No Result For "{{ $searchTerm }}".</p>
         @endif
     </div>
 </div>

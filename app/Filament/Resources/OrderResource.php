@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\OrderStatus;
 use App\Filament\Resources\OrderResource\Pages;
 use App\Models\Order;
 use Filament\Forms\Form;
@@ -36,13 +37,9 @@ class OrderResource extends Resource {
                 Tables\Columns\TextColumn::make('total_amount')
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->colors([
-                        'warning' => fn ($state): bool => in_array($state, ['pending', 'awaiting_confirmation']),
-                        'success' => 'completed',
-                        'danger' => 'failed',
-                    ])
-                    ->badge(),
+                Tables\Columns\SelectColumn::make('status')
+                    ->options(OrderStatus::class)
+                    ->selectablePlaceholder(false),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -50,6 +47,9 @@ class OrderResource extends Resource {
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+            ])
             ->bulkActions([]);
     }
 
@@ -61,12 +61,7 @@ class OrderResource extends Resource {
                         Infolists\Components\TextEntry::make('order_number'),
                         Infolists\Components\TextEntry::make('user.name')->label('Customer'),
                         Infolists\Components\TextEntry::make('total_amount')->money('IDR'),
-                        Infolists\Components\TextEntry::make('status')->badge()->color(fn (string $state): string => match ($state) {
-                            'pending', 'awaiting_confirmation' => 'warning',
-                            'completed' => 'success',
-                            'failed' => 'danger',
-                            default => 'gray',
-                        }),
+                        Infolists\Components\TextEntry::make('status')->badge()->color(fn (OrderStatus $state): string => $state->getColor()),
                     ])->columns(2),
 
                 Infolists\Components\Section::make('Order Items')

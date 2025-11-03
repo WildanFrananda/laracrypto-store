@@ -1,47 +1,124 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F8F3E9] to-[#E8DCC8] py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full">
+            {{-- Logo Section --}}
+            <div class="text-center mb-8 animate-fade-in">
+                <a href="{{ route('home') }}" class="inline-block transition-transform duration-300 hover:scale-105">
+                    <img src="{{ asset('images/logo.png') }}" alt="SABIMUL Logo" class="h-16 mx-auto mb-4">
+                </a>
+                <h2 class="text-3xl font-bold text-[#443937] mb-2">Welcome Back</h2>
+                <p class="text-sm text-[#443937]/70">Sign in to your account to continue</p>
+            </div>
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+            {{-- Login Card --}}
+            <div class="bg-white rounded-2xl shadow-xl p-8 backdrop-blur-sm bg-opacity-95 transform transition-all duration-300 hover:shadow-2xl">
+                <!-- Session Status -->
+                <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                    @csrf
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+                    <!-- Email Address -->
+                    <div class="transform transition-all duration-300 focus-within:scale-[1.02]">
+                        <x-input-label for="email" :value="__('Email')" class="text-[#443937] font-medium mb-2" />
+                        <x-text-input 
+                            id="email" 
+                            class="block mt-1 w-full rounded-lg border-gray-300 focus:border-[#443937] focus:ring focus:ring-[#443937]/20 transition-all duration-300" 
+                            type="email" 
+                            name="email" 
+                            :value="old('email')" 
+                            required 
+                            autofocus 
+                            autocomplete="username" 
+                            placeholder="Enter your email"
+                        />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
 
-            <x-text-input id="password" class="block mt-1 w-full"
+                    <!-- Password -->
+                    <div class="transform transition-all duration-300 focus-within:scale-[1.02]">
+                        <x-input-label for="password" :value="__('Password')" class="text-[#443937] font-medium mb-2" />
+                        <x-text-input 
+                            id="password" 
+                            class="block mt-1 w-full rounded-lg border-gray-300 focus:border-[#443937] focus:ring focus:ring-[#443937]/20 transition-all duration-300"
                             type="password"
                             name="password"
-                            required autocomplete="current-password" />
+                            required 
+                            autocomplete="current-password"
+                            placeholder="Enter your password"
+                        />
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <label for="remember_me" class="inline-flex items-center group cursor-pointer">
+                            <input 
+                                id="remember_me" 
+                                type="checkbox" 
+                                class="rounded border-gray-300 text-[#443937] shadow-sm focus:ring-[#443937]/20 transition-all duration-200 cursor-pointer" 
+                                name="remember"
+                            >
+                            <span class="ms-2 text-sm text-[#443937] group-hover:text-gray-900 transition-colors duration-200">{{ __('Remember me') }}</span>
+                        </label>
+
+                        @if (Route::has('password.request'))
+                            <a 
+                                class="text-sm text-[#443937] hover:text-gray-900 transition-colors duration-200 relative group" 
+                                href="{{ route('password.request') }}"
+                            >
+                                {{ __('Forgot password?') }}
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#443937] group-hover:w-full transition-all duration-300"></span>
+                            </a>
+                        @endif
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="space-y-4">
+                        <button 
+                            type="submit"
+                            class="w-full bg-[#443937] text-white py-3 px-4 rounded-lg font-medium shadow-lg hover:bg-[#332B29] transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-[#443937]/50 focus:ring-offset-2"
+                        >
+                            {{ __('Log in') }}
+                        </button>
+
+                        {{-- Register Link --}}
+                        <div class="text-center">
+                            <span class="text-sm text-[#443937]/70">Don't have an account? </span>
+                            <a 
+                                href="{{ route('register') }}" 
+                                class="text-sm text-[#443937] hover:text-gray-900 font-medium transition-colors duration-200 relative group"
+                            >
+                                Sign up
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#443937] group-hover:w-full transition-all duration-300"></span>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {{-- Footer Text --}}
+            <p class="mt-8 text-center text-sm text-[#443937]/60">
+                © {{ date('Y') }} SABIMUL. All rights reserved.
+            </p>
         </div>
+    </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
+    {{-- Custom Animation Styles --}}
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fade-in 0.6s ease-out;
+        }
+    </style>
 </x-guest-layout>

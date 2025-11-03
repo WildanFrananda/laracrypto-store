@@ -6,11 +6,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
@@ -30,17 +32,22 @@ class CategoryResource extends Resource {
                     ->afterStateUpdated(
                         fn (Set $set, ?string $state) => $set('slug', Str::slug($state))
                     ),
-
                 TextInput::make('slug')
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->collection('categories')
+                    ->image()
+                    ->required(),
             ]);
     }
 
     public static function table(Table $table): Table {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('image')
+                    ->collection('categories'),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),

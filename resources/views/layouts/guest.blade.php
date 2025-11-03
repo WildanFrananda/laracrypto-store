@@ -14,17 +14,58 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gradient-to-br from-[#F8F3E9] via-[#EDE4D3] to-[#E8DCC8] relative overflow-hidden">
+            {{-- Decorative Background Elements --}}
+            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                {{-- Top Right Circle --}}
+                <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#443937]/5 rounded-full blur-3xl animate-float"></div>
+                
+                {{-- Bottom Left Circle --}}
+                <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-[#443937]/5 rounded-full blur-3xl animate-float-delayed"></div>
+                
+                {{-- Center Circle --}}
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/20 rounded-full blur-3xl"></div>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            {{-- Content --}}
+            <div class="relative z-10">
                 {{ $slot }}
             </div>
         </div>
+
+        {{-- Custom Animations --}}
+        <style>
+            @keyframes float {
+                0%, 100% {
+                    transform: translateY(0px) translateX(0px);
+                }
+                50% {
+                    transform: translateY(-20px) translateX(10px);
+                }
+            }
+            
+            @keyframes float-delayed {
+                0%, 100% {
+                    transform: translateY(0px) translateX(0px);
+                }
+                50% {
+                    transform: translateY(20px) translateX(-10px);
+                }
+            }
+            
+            .animate-float {
+                animation: float 8s ease-in-out infinite;
+            }
+            
+            .animate-float-delayed {
+                animation: float-delayed 10s ease-in-out infinite;
+            }
+
+            /* Smooth gradient animation */
+            body {
+                background-attachment: fixed;
+            }
+        </style>
     </body>
 </html>

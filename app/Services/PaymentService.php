@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\OrderStatus;
 use App\Events\OrderCompleted;
 use App\Models\Order;
 use Exception;
@@ -102,7 +103,7 @@ class PaymentService {
             return null;
         }
 
-        if ($order->status === 'completed' || $order->status === 'failed') {
+        if ($order->status === OrderStatus::COMPLETED || $order->status === OrderStatus::FAILED) {
             return $order;
         }
 

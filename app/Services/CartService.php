@@ -64,4 +64,10 @@ class CartService {
     public function count(): int {
         return $this->get()->count();
     }
+
+    public function replaceAndAdd(int $productVariantId, int $quantity = 1): void {
+        session()->forget('cart');
+
+        $this->add($productVariantId, $quantity);
+    }
 }
