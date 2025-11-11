@@ -233,9 +233,10 @@
 
                                     <!-- Action Buttons -->
                                     <div class="space-y-3">
-                                        <a href="#"
+                                        <a href="{{ route('products.catalog') }}"
                                             class="group w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-[#CEA87C] to-[#9B7E5C] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                                            <span>Browse {{ $category->name }}</span>
+                                            {{-- <span>Browse {{ $category->name }}</span> --}}
+                                            <span>Browse Collections</span>
                                             <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform duration-300"
                                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -274,7 +275,7 @@
         </div>
 
         <!-- View All Button -->
-        <div class="mt-16 text-center animate-[fadeInUp_0.8s_ease-out_0.5s_both]">
+        {{-- <div class="mt-16 text-center animate-[fadeInUp_0.8s_ease-out_0.5s_both]">
             <a href="#"
                 class="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#CEA87C] via-[#9B7E5C] to-[#CEA87C] bg-size-200 bg-pos-0 hover:bg-pos-100 text-white font-bold text-lg rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500">
                 <span>View All Categories</span>
@@ -284,7 +285,7 @@
                         d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
             </a>
-        </div>
+        </div> --}}
     </div>
     <style>
         [x-cloak] {

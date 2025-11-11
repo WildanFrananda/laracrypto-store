@@ -1,0 +1,22 @@
+services:
+  laravel.test:
+    # override the ports with empty list so host ports are freed for nginx
+    ports: []
+
+  nginx:
+    image: nginx:stable
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - laravel.test
+    networks:
+      - sail
+
+networks:
+  sail:
+    external: true

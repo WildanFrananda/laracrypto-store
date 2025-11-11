@@ -1,0 +1,49 @@
+name: CI/CD → Build & Deploy (self-hosted runner)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure files owned by runner user (optional)
+        run: |
+          # make sure runner user can write files (adjust if needed)
+          sudo chown -R $(whoami):$(whoami) .
+
+      - name: Install PHP dependencies (using composer image)
+        run: |
+          # install composer deps into repo vendor folder (no scripts to avoid artisan pre-run)
+          docker run --rm -v "${{ github.workspace }}":/app -w /app composer:2 \
+            composer install --no-interaction --prefer-dist --no-scripts --no-progress
+        env:
+          COMPOSER_ALLOW_SUPERUSER: "1"
+
+      - name: Build frontend assets (Node)
+        run: |
+          # build vite assets using official node image
+          docker run --rm -v "${{ github.workspace }}":/app -w /app node:18-bullseye \
+            bash -lc "npm ci && npm run build"
+        # if you don't use npm/vite, this step will just run and do nothing (or remove it)
+
+      - name: Build & deploy docker-compose (production override)
+        run: |
+          # use prod override so nginx is present; this builds images then brings up services
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml build --pull --no-cache
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
+
+      - name: Run post-deploy tasks (artisan migrate, cache)
+        run: |
+          # run artisan commands inside the laravel container
+          # -T to disable pseudo-tty (recommended in CI)
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T laravel.test php artisan migrate --force || true
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T laravel.test php artisan config:cache || true
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml exec -T laravel.test php artisan route:cache || true
+
+      - name: Cleanup unused images
+        run: docker image prune -f || true

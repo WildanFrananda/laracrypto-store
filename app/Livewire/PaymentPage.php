@@ -38,6 +38,42 @@ class PaymentPage extends Component {
         }
     }
 
+    public function handleMidtransSuccess($result): void {
+        // Update payment record
+        $this->order->payments()->create([
+            'transaction_id' => $result['transaction_id'] ?? $result['order_id'],
+            'amount' => $this->order->total_amount,
+            'status' => 'completed',
+        ]);
+
+        // Update order status
+        $this->order->update([
+            'status' => 'awaiting_confirmation',
+            'payment_method' => 'midtrans',
+            'transaction_hash' => $result['transaction_id'] ?? null,
+        ]);
+
+        $this->isProcessing = true;
+
+        // Force refresh to show success state
+        $this->checkOrderStatus();
+    }
+
+    public function handleMidtransPending($result): void {
+        $this->order->payments()->create([
+            'transaction_id' => $result['transaction_id'] ?? $result['order_id'],
+            'amount' => $this->order->total_amount,
+            'status' => 'pending',
+        ]);
+
+        $this->order->update([
+            'status' => 'awaiting_confirmation',
+            'payment_method' => 'midtrans',
+        ]);
+
+        $this->isProcessing = true;
+    }
+
     #[On('payment-sent')]
     public function handlePaymentSent(string $txHash): void {
         $this->order->payments()->create([
