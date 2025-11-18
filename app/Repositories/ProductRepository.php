@@ -16,7 +16,9 @@ class ProductRepository implements ProductRepositoryInterface {
         array $filters = [],
         string $sortBy = 'latest'
     ): LengthAwarePaginator {
-        $query = Product::query()->with(['category', 'variants']);
+        $query = Product::query()
+            ->with(['media', 'category', 'variants']);
+
         $this->applyFilters($query, $filters);
         $this->applySorting($query, $sortBy);
 
@@ -47,6 +49,7 @@ class ProductRepository implements ProductRepositoryInterface {
         return Product::query()
             ->where('slug', $slug)
             ->with([
+                'media',
                 'category',
                 'variants.material',
                 'colors',
@@ -56,7 +59,7 @@ class ProductRepository implements ProductRepositoryInterface {
 
     public function getBestSellers(int $limit = 4): Collection {
         return Product::query()
-            ->with('category')
+            ->with(['media', 'category'])
             ->latest()
             ->take($limit)
             ->get();
@@ -74,6 +77,7 @@ class ProductRepository implements ProductRepositoryInterface {
         }
 
         return Product::query()
+            ->with('media')
             ->where(function (Builder $query) use ($searchTerms) {
                 foreach ($searchTerms as $word) {
                     $query

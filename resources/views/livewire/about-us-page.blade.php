@@ -57,7 +57,7 @@
                         <div class="relative group">
                             <div class="absolute -inset-4 bg-gradient-to-r from-[#CEA87C] to-[#9B7E5C] rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity duration-500"></div>
                             <div class="relative aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden shadow-2xl">
-                                <img src="{{ asset('images/about-us.png') }}" 
+                                <img src="{{ asset('images/about-us.webp') }}" 
                                      alt="About Us" 
                                      class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
                                 

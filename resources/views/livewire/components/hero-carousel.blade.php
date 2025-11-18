@@ -97,7 +97,7 @@
             <div class="absolute bottom-20 right-20 w-40 h-40 bg-amber-300/20 rounded-full blur-2xl animate-pulse-slow animation-delay-1000 z-0"></div>
             
             <img class="relative h-full w-full object-cover object-center animate-fade-in-right animation-delay-200 z-20" 
-                src="{{ asset('images/hero.png') }}" 
+                src="{{ asset('images/hero.webp') }}" 
                 alt="Model wearing hijab">
         </div>
     </div>

@@ -162,33 +162,40 @@
                             <div
                                 class="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 h-72 mb-4 group-hover:shadow-xl transition-shadow duration-500">
                                 @if($product->getFirstMedia('products'))
-                                {{ $product->getFirstMedia('products')->img()->attributes(['class' => 'w-full h-full
-                                object-cover transform group-hover:scale-110 transition-transform duration-700
-                                ease-out', 'alt' => $product->name]) }}
-                                @else
-                                <img src="https://placehold.co/400x400/f3f4f6/9B7E5C?text=No+Image"
-                                    alt="{{ $product->name }}"
-                                    class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out">
-                                @endif
+                                {{ $product->getFirstMedia('products')->img('catalog')->attributes([
+                                'class' => 'w-full h-full object-cover transform group-hover:scale-110
+                                transition-transform duration-700 ease-out',
+                                'alt' => $product->name,
+                                'loading' => $index < 3 ? 'eager' : 'lazy',
+                                    '300',
+                                    'height' => '375'
+                                    ]) }}
+                                    @else
+                                    <img src="https://placehold.co/400x400/f3f4f6/9B7E5C?text=No+Image"
+                                        alt="{{ $product->name }}" loading="{{ $index < 3 ? 'eager' : 'lazy' }}"
+                                        width="300" height="375"
+                                        class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out">
+                                    @endif
 
-                                <!-- Hover Overlay -->
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-4">
-                                    <a href="{{ route('products.detail', $product->slug) }}"
-                                        class="text-white text-sm font-semibold flex items-center gap-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                        Lihat Detail
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
 
-                                <!-- Badge/Tag -->
-                                <div
-                                    class="absolute top-3 right-3 bg-amber-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                                    New
-                                </div>
+                                    <!-- Hover Overlay -->
+                                    <div
+                                        class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end justify-center pb-4">
+                                        <a href="{{ route('products.detail', $product->slug) }}"
+                                            class="text-white text-sm font-semibold flex items-center gap-1 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                            Lihat Detail
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+
+                                    <!-- Badge/Tag -->
+                                    <div
+                                        class="absolute top-3 right-3 bg-amber-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                                        New
+                                    </div>
                             </div>
 
                             <!-- Product Info -->

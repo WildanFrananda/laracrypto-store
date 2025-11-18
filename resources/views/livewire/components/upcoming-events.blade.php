@@ -1,6 +1,6 @@
 <div class="relative bg-[#202020] py-12 sm:py-16 overflow-hidden" id="events">
     {{-- Background Pattern --}}
-    <div class="absolute inset-0 bg-center bg-repeat opacity-5" style="background-image: url('{{ asset('images/upcomingbg.png') }}');"></div>
+    <div class="absolute inset-0 bg-center bg-repeat opacity-5" style="background-image: url('{{ asset('images/upcomingbg.webp') }}');"></div>
     
     {{-- Decorative Elements --}}
     <div class="absolute top-0 right-0 w-96 h-96 bg-[#443937]/10 rounded-full blur-3xl"></div>

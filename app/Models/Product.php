@@ -18,15 +18,50 @@ class Product extends Model implements HasMedia {
 
     protected $fillable = ['category_id', 'name', 'slug', 'description', 'base_price'];
 
-    public function registerMediaConversions(?Media $media = null): void {
-        $this->addMediaConversion('thumb')
-            ->width(400)
-            ->height(500)
-            ->sharpen(10);
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection('products')
+            ->useFallbackUrl('/images/placeholder.jpg')
+            ->useFallbackPath(public_path('/images/placeholder.jpg'))
+            ->registerMediaConversions(function (?Media $media = null) {
+                $this
+                    ->addMediaConversion('thumb')
+                    ->width(400)
+                    ->height(500)
+                    ->format('webp')
+                    ->quality(85)
+                    ->sharpen(10)
+                    ->nonQueued() // Generate immediately
+                    ->performOnCollections('products');
+
+                $this
+                    ->addMediaConversion('catalog')
+                    ->width(300)
+                    ->height(375)
+                    ->format('webp')
+                    ->quality(80)
+                    ->nonQueued()
+                    ->performOnCollections('products');
+
+                $this
+                    ->addMediaConversion('detail')
+                    ->width(800)
+                    ->height(1000)
+                    ->format('webp')
+                    ->quality(90)
+                    ->performOnCollections('products');
+            });
     }
 
     public function getImageUrlAttribute(): string {
+        return $this->getFirstMediaUrl('products', 'catalog');
+    }
+
+    public function getThumbUrlAttribute(): string {
         return $this->getFirstMediaUrl('products', 'thumb');
+    }
+
+    public function getDetailImageUrlAttribute(): string {
+        return $this->getFirstMediaUrl('products', 'detail');
     }
 
     public function category(): BelongsTo {

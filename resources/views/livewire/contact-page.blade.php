@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div class="relative h-96 md:h-full min-h-[400px] rounded-lg overflow-hidden">
-                    <img src="{{ asset('images/contact.png') }}" alt="Contact Us" class="absolute inset-0 w-full h-full object-cover">
+                    <img src="{{ asset('images/contact.webp') }}" alt="Contact Us" class="absolute inset-0 w-full h-full object-cover">
                     <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center p-8">
                         <h1 class="text-4xl font-bold text-white">Contact</h1>
                         <p class="mt-4 text-lg text-gray-200">

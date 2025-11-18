@@ -59,3 +59,37 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+## Maintenance Command
+```bash
+# View logs
+docker compose -f docker-compose.prod.yml logs -f app
+
+# Enter container
+docker compose -f docker-compose.prod.yml exec app sh
+
+# Clear cache
+docker compose -f docker-compose.prod.yml exec app php artisan cache:clear
+
+# Restart services
+docker compose -f docker-compose.prod.yml restart
+
+# Update and redeploy
+./deploy.sh
+```
+
+## Monitoring and Debugging
+```bash
+# Check Nginx cache
+docker compose -f docker-compose.prod.yml exec nginx ls -lh /var/cache/nginx
+
+# Check PHP-FPM status
+curl http://localhost/status
+
+# Check OPcache status
+docker compose -f docker-compose.prod.yml exec app php -i | grep opcache
+
+# Monitor Redis
+docker compose -f docker-compose.prod.yml exec redis redis-cli INFO
+```

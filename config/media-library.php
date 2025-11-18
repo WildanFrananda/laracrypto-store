@@ -130,7 +130,9 @@ return [
             '--all-progressive', // this will make sure the resulting image is a progressive one
         ],
         Spatie\ImageOptimizer\Optimizers\Pngquant::class => [
+            '-m85',
             '--force', // required parameter for this package
+            '--skip-if-larger',
         ],
         Spatie\ImageOptimizer\Optimizers\Optipng::class => [
             '-i0', // this will result in a non-interlaced, progressive scanned image
@@ -233,7 +235,7 @@ return [
          * ServerSideEncryption, Metadata, ACL, ContentEncoding
          */
         'extra_headers' => [
-            'CacheControl' => 'max-age=604800',
+            'CacheControl' => 'max-age=31536000',
         ],
     ],
 

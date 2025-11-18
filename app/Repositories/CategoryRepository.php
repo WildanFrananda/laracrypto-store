@@ -9,9 +9,24 @@ use App\Repositories\Contracts\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
 
 class CategoryRepository implements CategoryRepositoryInterface {
-    public function getFeatured(): Collection {
+    public function getAll(): Collection {
         return Category::query()
-            ->take(4)
+            ->with('media') // Eager load media
             ->get();
+    }
+
+    public function getFeatured(int $limit = 4): Collection {
+        return Category::query()
+            ->with('media') // Eager load media
+            ->latest()
+            ->take($limit)
+            ->get();
+    }
+
+    public function findBySlug(string $slug): ?Category {
+        return Category::query()
+            ->with('media') // Eager load media
+            ->where('slug', $slug)
+            ->firstOrFail();
     }
 }
