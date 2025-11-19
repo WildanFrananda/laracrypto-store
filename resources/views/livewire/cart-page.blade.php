@@ -189,7 +189,7 @@
                     </div>
                     <h3 class="text-2xl font-bold text-[#443937] mb-3">Your cart is empty</h3>
                     <p class="text-[#6B5D57] mb-8">Looks like you haven't added any items to your cart yet.</p>
-                    <a href="{{ route('products.index') }}"
+                    <a href="{{ route('products.catalog') }}"
                         class="inline-block bg-gradient-to-r from-[#9B7E5C] to-[#B8936A] text-white py-3 px-8 rounded-lg font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200">
                         Start Shopping
                     </a>
