@@ -31,7 +31,7 @@ class Promotion extends Model implements HasMedia {
                     ->height(600)
                     ->format('webp')
                     ->quality(85)
-                    ->nonQueued()
+                    ->queued()
                     ->performOnCollections('promotions');
 
                 $this
@@ -40,7 +40,7 @@ class Promotion extends Model implements HasMedia {
                     ->height(200)
                     ->format('webp')
                     ->quality(80)
-                    ->nonQueued()
+                    ->queued()
                     ->performOnCollections('promotions');
             });
     }
