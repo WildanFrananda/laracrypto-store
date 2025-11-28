@@ -22,7 +22,7 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: sabimul-tunnel
     restart: unless-stopped
-    command: tunnel run
+    command: tunnel run --protocol http2
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     networks:
