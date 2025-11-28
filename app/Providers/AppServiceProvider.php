@@ -22,14 +22,23 @@ class AppServiceProvider extends ServiceProvider {
      * Bootstrap any application services.
      */
     public function boot(): void {
-        if ($this->app->environment('production') || config('app.force_https') || str_contains(request()->getHost(), 'ngrok')) {
+        if ($this->app->environment('production') || config('app.force_https')) {
             URL::forceScheme('https');
-        }
-
-        if (str_contains(request()->getHost(), 'ngrok-free.app')) {
-            $this->app['url']->forceRootUrl(config('app.url'));
         }
 
         request()->server->set('HTTPS', 'on');
     }
+
+    // here if cloudflare tunnel doesn't work, back using ngrok
+    // public function boot(): void {
+    //     if ($this->app->environment('production') || config('app.force_https') || str_contains(request()->getHost(), 'ngrok')) {
+    //         URL::forceScheme('https');
+    //     }
+
+    //     if (str_contains(request()->getHost(), 'ngrok-free.app')) {
+    //         $this->app['url']->forceRootUrl(config('app.url'));
+    //     }
+
+    //     request()->server->set('HTTPS', 'on');
+    // }
 }

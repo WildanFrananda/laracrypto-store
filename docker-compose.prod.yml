@@ -18,6 +18,16 @@ services:
     networks:
       - sabimul-network
 
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: sabimul-tunnel
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      - sabimul-network
+
   # PHP-FPM application
   app:
     build:
