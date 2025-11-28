@@ -44,8 +44,6 @@ services:
       - ./:/var/www/html
       - php-logs:/var/log/php-fpm
     environment:
-      - APP_ENV=${APP_ENV:-production}
-      - APP_DEBUG=${APP_DEBUG:-false}
       - DB_HOST=mysql
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
