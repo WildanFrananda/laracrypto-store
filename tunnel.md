@@ -24,6 +24,8 @@ This document explains how to publish a TALL Stack application (Tailwind, Alpine
 ## 2. Cloudflare Dashboard Setup
 
 1. Log in to **Cloudflare Dashboard**
+   - https://dash.cloudflare.com
+   - https://one.dash.cloudflare.com
 2. Open **Zero Trust** menu (Left Sidebar)
 3. Navigate to **Networks > Tunnels**
 4. Click **Create a tunnel**

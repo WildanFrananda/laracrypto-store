@@ -434,7 +434,7 @@
                                 </button>
                                 @endif
 
-                                @if($cryptoAmount)
+                                {{-- @if($cryptoAmount)
                                 <button
                                     x-on:click="$dispatch('initiate-payment', [{ amount: {{ $cryptoAmount }}, toAddress: '{{ $recipientAddress }}' }])"
                                     class="payment-button w-full flex items-center justify-center gap-3 bg-gradient-to-r from-gray-900 to-gray-800 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
@@ -445,7 +445,7 @@
                                     </svg>
                                     <span>Bayar dengan Crypto</span>
                                 </button>
-                                @endif
+                                @endif --}}
                             </div>
 
                             <div class="mt-6 pt-6 border-t border-gray-200">
