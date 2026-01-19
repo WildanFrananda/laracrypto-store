@@ -4,10 +4,15 @@ services:
     container_name: sabimul-nginx-dev
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./:/var/www/html:ro
       - ./docker/nginx/dev.conf:/etc/nginx/conf.d/default.conf:ro
+      - type: bind
+        source: ./docker/nginx/ssl
+        target: /etc/nginx/ssl
+        read_only: true
     depends_on:
       - laravel.test
     networks:
@@ -19,15 +24,14 @@ services:
       context: './vendor/laravel/sail/runtimes/8.4'
       dockerfile: Dockerfile
       args:
-        WWWGROUP: '${WWWGROUP}'
+        WWWGROUP: '${WWWGROUP:-1000}'
     image: 'sail-8.4/app'
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
-      - '${APP_PORT:-80}:80'
       - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
     environment:
-      WWWUSER: '${WWWUSER}'
+      WWWUSER: '${WWWUSER:-1000}'
       LARAVEL_SAIL: 1
       XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
       XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
